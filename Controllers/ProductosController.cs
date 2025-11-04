@@ -22,14 +22,14 @@ public class ProductosController : Controller
     {
         return View();
     }
-    
+
     [HttpPost]
     public IActionResult Create(Productos producto)
     {
-        producto.IdProducto = productoRepository.Listar().Max(p => p.IdProducto) + 1;
         productoRepository.Crear(producto);
         return RedirectToAction("Index");
     }
+
 
     [HttpGet]
     public IActionResult Edit(int id)

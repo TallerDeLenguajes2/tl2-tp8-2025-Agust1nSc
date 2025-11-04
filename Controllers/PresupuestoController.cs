@@ -1,71 +1,66 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 public class PresupuestosController : Controller
 {
-    private PresupuestoRepository presupuestoRepository;
+    private PresupuestoRepository repo = new();
+    private ProductoRepository repoProd = new();
 
-    public PresupuestosController()
-    {
-        presupuestoRepository = new PresupuestoRepository();
-    }
-
-    [HttpGet]
     public IActionResult Index()
     {
-        List<Presupuesto> presupuestos = presupuestoRepository.Listar();
-        return View(presupuestos);
+        var lista = repo.Listar();
+        return View(lista);
     }
 
-    [HttpGet]
-    public IActionResult Details(int id)
-    {
-        var presupuesto = presupuestoRepository.ObtenerPorId(id);
-        if (presupuesto == null) return NotFound();
-        return View(presupuesto);
-    }
-
-    [HttpGet]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
-    public IActionResult Create(Presupuesto presupuesto)
+    public IActionResult Create(Presupuesto p)
     {
-        presupuesto.IdPresupuesto = presupuestoRepository.Listar().Max(p => p.IdPresupuesto) + 1;
-        presupuestoRepository.Crear(presupuesto);
+        p.FechaCreacion = DateTime.Now;
+        repo.Crear(p);
         return RedirectToAction("Index");
     }
 
-    [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Details(int id)
     {
-        var presupuesto = presupuestoRepository.ObtenerPorId(id);
-        if (presupuesto == null) return NotFound();
-        return View(presupuesto);
+        var p = repo.ObtenerPorId(id);
+        if (p == null) return NotFound();
+        return View(p);
     }
 
+    public IActionResult Edit(int id)
+    {
+        var p = repo.ObtenerPorId(id);
+        if (p == null) return NotFound();
+        return View(p);
+    }
+
+   
     [HttpPost]
     public IActionResult Edit(Presupuesto presupuesto)
     {
-        presupuestoRepository.Modificar(presupuesto.IdPresupuesto, presupuesto);
+        repo.Modificar(presupuesto.IdPresupuesto, presupuesto);
         return RedirectToAction("Index");
     }
 
-    [HttpGet]
+    
     public IActionResult Delete(int id)
     {
-        var presupuesto = presupuestoRepository.ObtenerPorId(id);
-        if (presupuesto == null) return NotFound();
-        return View(presupuesto);
+        var p = repo.ObtenerPorId(id);
+        if (p == null) return NotFound();
+        return View(p);
     }
 
+    
     [HttpPost]
     public IActionResult Delete(Presupuesto presupuesto)
     {
-        presupuestoRepository.Eliminar(presupuesto.IdPresupuesto);
+        repo.Eliminar(presupuesto.IdPresupuesto);
         return RedirectToAction("Index");
     }
+
+    
 }
