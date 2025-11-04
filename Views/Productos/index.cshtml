@@ -1,0 +1,23 @@
+@model List<Productos>
+
+<h2>Listado de Productos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.IdProducto</td>
+                <td>@p.Descripcion</td>
+                <td>$@p.Precio</td>
+            </tr>
+        }
+    </tbody>
+</table>

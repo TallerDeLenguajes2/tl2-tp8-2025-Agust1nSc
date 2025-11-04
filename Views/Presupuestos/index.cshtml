@@ -1,0 +1,31 @@
+@model List<Presupuesto>
+
+<h2>Listado de Presupuestos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Destinatario</th>
+            <th>Fecha</th>
+            <th>Total (sin IVA)</th>
+            <th>Total (con IVA)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.IdPresupuesto</td>
+                <td>@p.NombreDestinatario</td>
+                <td>@p.FechaCreacion.ToShortDateString()</td>
+                <td>$@p.MontoPresupuesto()</td>
+                <td>$@p.MontoPresupuestoConIva()</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Presupuestos/Details/@p.IdPresupuesto">Ver Detalle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

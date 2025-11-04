@@ -1,0 +1,37 @@
+@model Presupuesto
+
+<h2>Detalle del Presupuesto</h2>
+
+<p><strong>ID:</strong> @Model.IdPresupuesto</p>
+<p><strong>Destinatario:</strong> @Model.NombreDestinatario</p>
+<p><strong>Fecha:</strong> @Model.FechaCreacion.ToShortDateString()</p>
+
+<h4>Productos del presupuesto</h4>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.Detalle)
+        {
+            <tr>
+                <td>@d.Producto.Descripcion</td>
+                <td>$@d.Producto.Precio</td>
+                <td>@d.Cantidad</td>
+                <td>$@(d.Producto.Precio * d.Cantidad)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><strong>Total sin IVA:</strong> $@Model.MontoPresupuesto()</p>
+<p><strong>Total con IVA (21%):</strong> $@Model.MontoPresupuestoConIva()</p>
+<p><strong>Total de productos:</strong> @Model.CantidadProductos()</p>
+
+<a class="btn btn-secondary" href="/Presupuestos">Volver al listado</a>
