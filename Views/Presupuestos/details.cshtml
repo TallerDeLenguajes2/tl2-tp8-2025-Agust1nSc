@@ -24,7 +24,7 @@
                 <td>@d.Producto.Descripcion</td>
                 <td>$@d.Producto.Precio</td>
                 <td>@d.Cantidad</td>
-                <td>$@(d.Producto.Precio * d.Cantidad)</td>
+                <td>$@(d.Producto.Precio* d.Cantidad)</td>
             </tr>
         }
     </tbody>
@@ -33,5 +33,10 @@
 <p><strong>Total sin IVA:</strong> $@Model.MontoPresupuesto()</p>
 <p><strong>Total con IVA (21%):</strong> $@Model.MontoPresupuestoConIva()</p>
 <p><strong>Total de productos:</strong> @Model.CantidadProductos()</p>
+
+<a asp-action="AgregarProducto" asp-route-id="@Model.IdPresupuesto" class="btn btn-success mt-3">
+    Agregar producto
+</a>
+
 
 <a class="btn btn-secondary" href="/Presupuestos">Volver al listado</a>

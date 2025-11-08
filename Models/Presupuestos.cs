@@ -25,9 +25,9 @@ public class Presupuesto
     public string NombreDestinatario { get => nombreDestinatario; set => nombreDestinatario = value; }
     public DateTime FechaCreacion { get => fechaCreacion; set => fechaCreacion = value; }
     public List<PresupuestoDetalle> Detalle { get => detalle; set => detalle = value; }
-    public double MontoPresupuesto()
+    public decimal MontoPresupuesto()
     {
-        double subtotal = 0;
+        decimal subtotal = 0;
         foreach (var aux in detalle)
         {
             subtotal += aux.Producto.Precio * aux.Cantidad;
@@ -35,10 +35,10 @@ public class Presupuesto
         return subtotal;
     }
 
-    public double MontoPresupuestoConIva()
+    public decimal MontoPresupuestoConIva()
     {
 
-        return MontoPresupuesto() * 1.21;
+        return MontoPresupuesto() * 1.21m;
     }
 
     public int CantidadProductos()

@@ -1,0 +1,65 @@
+@model Presupuesto
+
+<h2>Presupuesto #@Model.IdPresupuesto</h2>
+<p><strong>Destinatario:</strong> @Model.NombreDestinatario</p>
+<p><strong>Fecha:</strong> @Model.FechaCreacion.ToShortDateString()</p>
+
+<hr />
+
+<h3>Productos en este presupuesto</h3>
+
+@if (Model.Detalle != null && Model.Detalle.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model.Detalle)
+            {
+                <tr>
+                    <td>@d.Producto.Descripcion</td>
+                    <td>@d.Producto.Precio</td>
+                    <td>@d.Cantidad</td>
+                    <td>@(d.Cantidad * d.Producto.Precio)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay productos agregados aún.</p>
+}
+
+<hr />
+
+<h4>Agregar producto</h4>
+
+<form asp-action="AgregarProducto" method="post">
+    <input type="hidden" name="IdPresupuesto" value="@Model.IdPresupuesto" />
+
+    <div class="form-group">
+        <label for="IdProducto">Producto</label>
+        <select name="IdProducto" class="form-control" required>
+            <option value="">Seleccione un producto...</option>
+            @foreach (var p in ViewBag.Productos)
+            {
+                <option value="@p.IdProducto">@p.Descripcion (@p.Precio)</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mt-2">
+        <label for="Cantidad">Cantidad</label>
+        <input type="number" name="Cantidad" class="form-control" min="1" value="1" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Agregar</button>
+    <a asp-action="Details" asp-route-id="@Model.IdPresupuesto" class="btn btn-secondary mt-3 ms-2">Volver</a>
+</form>

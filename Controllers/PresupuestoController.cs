@@ -1,29 +1,95 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 
 public class PresupuestosController : Controller
 {
-    private PresupuestoRepository repo = new();
-    private ProductoRepository repoProd = new();
+    private readonly PresupuestoRepository repo;
+    private readonly ProductoRepository repoProd;
 
+    public PresupuestosController()
+    {
+        repo = new PresupuestoRepository();
+        repoProd = new ProductoRepository();
+    }
+
+    [HttpGet]
     public IActionResult Index()
     {
         var lista = repo.Listar();
         return View(lista);
     }
 
+    [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        var modelo = new PresupuestoViewModel
+        {
+            FechaCreacion = DateTime.Now
+        };
+        return View(modelo);
     }
 
     [HttpPost]
-    public IActionResult Create(Presupuesto p)
+    public IActionResult Create(PresupuestoViewModel presupuestoVM)
     {
-        p.FechaCreacion = DateTime.Now;
-        repo.Crear(p);
-        return RedirectToAction("Index");
+        if (!ModelState.IsValid)
+        {
+            return View(presupuestoVM);
+        }
+
+        if (presupuestoVM.FechaCreacion > DateTime.Now)
+        {
+            ModelState.AddModelError("FechaCreacion", "La fecha no puede ser futura.");
+            return View(presupuestoVM);
+        }
+
+        var nuevoPresupuesto = new Presupuesto
+        {
+            NombreDestinatario = presupuestoVM.NombreDestinatario,
+            FechaCreacion = presupuestoVM.FechaCreacion,
+            Detalle = new List<PresupuestoDetalle>()
+        };
+
+        repo.Crear(nuevoPresupuesto);
+        return RedirectToAction(nameof(Index));
     }
 
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var presupuesto = repo.ObtenerPorId(id);
+        if (presupuesto == null) return NotFound();
+
+        var presupuestoVM = new PresupuestoViewModel
+        {
+            IdPresupuesto = presupuesto.IdPresupuesto,
+            NombreDestinatario = presupuesto.NombreDestinatario,
+            FechaCreacion = presupuesto.FechaCreacion
+        };
+
+        return View(presupuestoVM);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(int id, PresupuestoViewModel presupuestoVM)
+    {
+        if (id != presupuestoVM.IdPresupuesto) return NotFound();
+        if (!ModelState.IsValid) return View(presupuestoVM);
+
+        var presupuestoAEditar = new Presupuesto
+        {
+            IdPresupuesto = presupuestoVM.IdPresupuesto,
+            NombreDestinatario = presupuestoVM.NombreDestinatario,
+            FechaCreacion = presupuestoVM.FechaCreacion
+        };
+
+        repo.Modificar(id, presupuestoAEditar);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var p = repo.ObtenerPorId(id);
@@ -31,22 +97,7 @@ public class PresupuestosController : Controller
         return View(p);
     }
 
-    public IActionResult Edit(int id)
-    {
-        var p = repo.ObtenerPorId(id);
-        if (p == null) return NotFound();
-        return View(p);
-    }
-
-   
-    [HttpPost]
-    public IActionResult Edit(Presupuesto presupuesto)
-    {
-        repo.Modificar(presupuesto.IdPresupuesto, presupuesto);
-        return RedirectToAction("Index");
-    }
-
-    
+    [HttpGet]
     public IActionResult Delete(int id)
     {
         var p = repo.ObtenerPorId(id);
@@ -54,7 +105,6 @@ public class PresupuestosController : Controller
         return View(p);
     }
 
-    
     [HttpPost]
     public IActionResult Delete(Presupuesto presupuesto)
     {
@@ -62,5 +112,33 @@ public class PresupuestosController : Controller
         return RedirectToAction("Index");
     }
 
-    
+    [HttpGet]
+    public IActionResult AgregarProducto(int id)
+    {
+        var presupuesto = repo.ObtenerPorId(id);
+        if (presupuesto == null) return NotFound();
+
+        ViewBag.Productos = repoProd.Listar();
+        return View(presupuesto);
+    }
+
+    [HttpPost]
+    public IActionResult AgregarProducto(int IdPresupuesto, int IdProducto, int Cantidad)
+    {
+        
+        if (IdProducto <= 0 || Cantidad <= 0)
+        {
+            var presupuesto = repo.ObtenerPorId(IdPresupuesto);
+            ViewBag.Productos = repoProd.Listar();
+            ViewBag.Error = "Debe seleccionar un producto y una cantidad válida.";
+            return View(presupuesto);
+        }
+
+       
+        var producto = repoProd.ObtenerPorId(IdProducto);
+        repo.AgregarProductoAPresupuesto(IdPresupuesto, producto, Cantidad);
+
+       
+        return RedirectToAction(nameof(Details), new { id = IdPresupuesto });
+    }
 }

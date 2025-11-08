@@ -5,13 +5,13 @@ public class Productos
 
     int idProducto;
     string descripcion;
-    int precio;
+    decimal precio;
 
     public Productos()
     {
     }
 
-    public Productos(int idProducto, string descripcion, int precio)
+    public Productos(int idProducto, string descripcion, decimal precio)
     {
         this.descripcion = descripcion;
         this.idProducto = idProducto;
@@ -20,5 +20,5 @@ public class Productos
 
     public int IdProducto { get => idProducto; set => idProducto = value; }
     public string Descripcion { get => descripcion; set => descripcion = value; }
-    public int Precio { get => precio; set => precio = value; }
+    public decimal Precio { get => precio; set => precio = value; }
 }

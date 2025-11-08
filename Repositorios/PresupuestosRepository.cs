@@ -109,37 +109,7 @@ public class PresupuestoRepository
         return lista;
     }
 
-    public bool AgregarProductoAPresupuesto(int idPresupuesto, Productos producto, int cantidad)
-    {
-        using var conexion = new SqliteConnection(cadenaConexion);
-        conexion.Open();
 
-        string sql = @"INSERT INTO PresupuestosDetalle (idPresupuesto, idProducto, Cantidad)
-                       VALUES (@presupuestoId, @productoId, @cantidad)";
-
-        using var comando = new SqliteCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@presupuestoId", idPresupuesto);
-        comando.Parameters.AddWithValue("@productoId", producto.IdProducto);
-        comando.Parameters.AddWithValue("@cantidad", cantidad);
-
-        try
-        {
-            return comando.ExecuteNonQuery() > 0;
-        }
-        catch
-        {
-            // Si ya existe, actualizamos la cantidad
-            string sqlUpdate = @"UPDATE PresupuestosDetalle 
-                                SET Cantidad = Cantidad + @cantidad
-                                WHERE idPresupuesto = @presupuestoId AND idProducto = @productoId";
-
-            using var comando2 = new SqliteCommand(sqlUpdate, conexion);
-            comando2.Parameters.AddWithValue("@cantidad", cantidad);
-            comando2.Parameters.AddWithValue("@presupuestoId", idPresupuesto);
-            comando2.Parameters.AddWithValue("@productoId", producto.IdProducto);
-            return comando2.ExecuteNonQuery() > 0;
-        }
-    }
 
     public bool Eliminar(int id)
     {
@@ -170,6 +140,22 @@ public class PresupuestoRepository
         comando.Parameters.AddWithValue("@nombre", presupuestoEditado.NombreDestinatario);
         comando.Parameters.AddWithValue("@fecha", presupuestoEditado.FechaCreacion.ToString("yyyy-MM-dd"));
         comando.Parameters.AddWithValue("@id", id);
+
+        return comando.ExecuteNonQuery() > 0;
+    }
+
+    public bool AgregarProductoAPresupuesto(int idPresupuesto, Productos producto, int cantidad)
+    {
+        using var conexion = new SqliteConnection(cadenaConexion);
+        conexion.Open();
+
+        string sql = @"INSERT INTO PresupuestosDetalle (idPresupuesto, idProducto, Cantidad)
+                   VALUES (@presupuestoId, @productoId, @cantidad)";
+
+        using var comando = new SqliteCommand(sql, conexion);
+        comando.Parameters.AddWithValue("@presupuestoId", idPresupuesto);
+        comando.Parameters.AddWithValue("@productoId", producto.IdProducto);
+        comando.Parameters.AddWithValue("@cantidad", cantidad);
 
         return comando.ExecuteNonQuery() > 0;
     }
