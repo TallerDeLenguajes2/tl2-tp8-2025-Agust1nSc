@@ -118,3 +118,4 @@ C:\Users\Agustin Saccone\Desktop\tl2-tp8-2025-Agust1nSc\obj\Debug\net9.0\tl2-tp8
 C:\Users\Agustin Saccone\Desktop\tl2-tp8-2025-Agust1nSc\obj\Debug\net9.0\tl2-tp8-2025-Agust1nSc.genruntimeconfig.cache
 C:\Users\Agustin Saccone\Desktop\tl2-tp8-2025-Agust1nSc\obj\Debug\net9.0\ref\tl2-tp8-2025-Agust1nSc.dll
 C:\Users\Agustin Saccone\Desktop\tl2-tp8-2025-Agust1nSc\obj\Debug\net9.0\tl2-tp8-2025-Agust1nSc.sourcelink.json
+C:\Users\Agustin Saccone\Desktop\tl2-tp8-2025-Agust1nSc\bin\Debug\net9.0\System.Data.SQLite.dll

@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto text-center mt-5">
+        <h1 class="text-danger display-4">🚫 Acceso Restringido</h1>
+        <hr />
+        <p class="lead">
+            No tienes permisos para modificar, crear o eliminar productos.
+        </p>
+        <p>
+            Esta acción es exclusiva para <strong>Administradores</strong>.
+        </p>
+
+        <div class="mt-4">
+            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg">
+                <i class="bi bi-arrow-left"></i> Volver al Listado de Productos
+            </a>
+        </div>
+    </div>
+</div>
